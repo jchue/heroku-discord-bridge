@@ -5,8 +5,8 @@
   "main": "app.js",
   "scripts": {
     "dev": "nodemon --exec babel-node app.js",
-    "build": "babel app.js --out-file index.js",
-    "start": "node index.js"
+    "build": "babel src --out-dir dist",
+    "start": "node dist/app.js"
   },
   "author": "",
   "license": "ISC",
