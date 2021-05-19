@@ -2,37 +2,74 @@ import axios from 'axios';
 
 require('dotenv').config();
 
-const discordWebhookId = process.env.DISCORD_WEBHOOK_ID;
-const discordWebhookToken = process.env.DISCORD_WEBHOOK_TOKEN;
+const channelId = process.env.DISCORD_CHANNEL_ID;
+const botToken = process.env.DISCORD_BOT_TOKEN;
 
-class Relay {
-  constructor(message = '') {
-    this.message = message;
-  }
+function Relay() {
+  this.webhookId = null;
+  this.webhookToken = null;
 
-  get message() {
-    return this._message;
-  }
+  this.init = async (name) => {
+    if (!name) {
+      throw new SyntaxError('Must initialize with name');
+    }
 
-  set message(value) {
-    this._message = value;
-  }
+    const headers = {
+      Authorization: `Bot ${botToken}`,
+    };
 
-  async send() {
-    if (!this.message) {
+    const config = {
+      headers,
+    };
+
+    const data = {
+      name,
+    };
+
+    // Create webhook
+    try {
+      const response = await axios.post(`https://discord.com/api/channels/${channelId}/webhooks`, data, config);
+
+      this.webhookId = response.data.id;
+      this.webhookToken = response.data.token;
+    } catch (error) {
+      console.error(error.response.data);
+    }
+  };
+
+  this.destroy = async () => {
+    const headers = {
+      Authorization: `Bot ${botToken}`,
+    };
+
+    const config = {
+      headers,
+    };
+
+    // Delete webhook
+    try {
+      await axios.delete(`https://discord.com/api/webhooks/${this.webhookId}`, config);
+    } catch (error) {
+      console.error(error.response.data);
+    }
+  };
+
+  this.send = async (message) => {
+    if (!message) {
       throw new SyntaxError('message is required');
     }
 
     try {
       const data = {
-        content: this.message,
+        content: message,
       };
 
-      await axios.post(`https://discord.com/api/webhooks/${discordWebhookId}/${discordWebhookToken}`, data);
+      await axios.post(`https://discord.com/api/webhooks/${this.webhookId}/${this.webhookToken}`, data);
     } catch (error) {
-      console.error(error);
+      console.error(error.response.data);
+      throw new Error(error.response.data.message);
     }
-  }
+  };
 }
 
 export default Relay;
