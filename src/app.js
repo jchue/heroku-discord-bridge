@@ -14,6 +14,14 @@ const port = process.env.PORT || '3000';
 const herokuSecret = process.env.HEROKU_SECRET;
 const name = process.env.DISCORD_BOT_NAME || 'Heroku Notifier';
 
+app.use(async (ctx, next) => {
+  try {
+    await next();
+  } catch (err) {
+    ctx.response.status = 500;
+  }
+});
+
 app.use(async (ctx) => {
   // Only accept POST requests
   if (ctx.request.method !== 'POST') {
@@ -28,7 +36,7 @@ app.use(async (ctx) => {
 
   if (signature !== hmac) {
     ctx.response.status = 400;
-    ctx.body = hmac;
+    console.error(`Error: Incorrect signature. Expected ${hmac} but received ${signature}.`);
     return;
   }
 
@@ -39,16 +47,12 @@ app.use(async (ctx) => {
   // Relay message
   const relay = new Relay();
   const message = process.env.DISCORD_MESSAGE_CONTENT || `${appName} build ${buildStatus} initiated by ${actor}`;
-  await relay.init(name);
 
-  relay.send(message).catch((error) => {
-    console.error(error);
-    ctx.response.status = 500;
-  });
+  await relay.init(name);
+  await relay.send(message);
+  await relay.destroy();
 
   ctx.response.status = 204;
-
-  await relay.destroy();
 });
 
 app.listen(port);

@@ -34,6 +34,7 @@ function Relay() {
       this.webhookToken = response.data.token;
     } catch (error) {
       console.error(error.response.data);
+      throw new Error(error.response.data.message);
     }
   };
 
@@ -51,6 +52,7 @@ function Relay() {
       await axios.delete(`https://discord.com/api/webhooks/${this.webhookId}`, config);
     } catch (error) {
       console.error(error.response.data);
+      throw new Error(error.response.data.message);
     }
   };
 
