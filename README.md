@@ -2,9 +2,23 @@
 
 ## Overview
 
-This application serves as a webhook that posts a message in a specified Discord channel whenever certain actions are executed in Heroku (e.g., build initiated, application deployed, etc.). It's built using [Koa](https://koajs.com), a lightweight framework for Node.js.
+This application serves as a webhook that posts a message in a specified Discord channel whenever certain actions are executed in Heroku (e.g., build initiated, application deployed, etc.). Essentially, it is middleman between a Discord bot and a Heroku webhook. It's built using [Koa](https://koajs.com), a lightweight framework for Node.js.
 
 Currently, it only supports notifications in a single Discord channel.
+
+## Set Up Discord Application
+
+### Create Application
+
+1. Navigate to the [Discord Developer Portal](https://discord.com/developers/applications).
+1. Select the **New Application** button. Enter a unique name, then select the **Create** button.
+
+### Add Application to Discord Server
+
+1. Once you create an application on the Discord Developer Portal, obtain the **Application ID** from the **General Information** page.
+1. Using a web browser, navigate to `https://discord.com/api/oauth2/authorize?scope=bot&permissions=536870912&client_id=<APPLICATION_ID>`
+1. Select the server where the notifications should be posted, then select the **Continue** button.
+1. Ensure the **Manage Webhooks** option is selected on the subsequent screen, then select the **Authorize** button.
 
 ## Environment Variables
 
@@ -21,7 +35,7 @@ Currently, it only supports notifications in a single Discord channel.
 The Discord bot's token
 
 1. Navigate [Discord Developer Portal](https://discord.com/developers/applications).
-1. Select the **New Application** button. Enter a unique name, then select the **Create** button.
+1. Select the application under **My Applications**.
 1. Select **Bot** from the sidebar.
 1. Select the **Add Bot** button. Then select the **Yes, do it! button**.
 1. Under **Build-A-Bot**, under **Token**, select the **Copy** button.
