@@ -1,5 +1,7 @@
 # Heroku-Discord Bridge
 
+![sample-message](https://user-images.githubusercontent.com/5141427/119066580-ee586180-b994-11eb-8f31-ed2076ce6a89.png)
+
 ## Overview
 
 This application serves as a webhook that posts a message in a specified Discord channel whenever certain actions are executed in Heroku (e.g., build initiated, application deployed, etc.). Essentially, it is middleman between a Discord bot and a Heroku webhook. It's built using [Koa](https://koajs.com), a lightweight framework for Node.js.
@@ -21,6 +23,8 @@ Currently, it only supports notifications in a single Discord channel.
 1. Ensure the **Manage Webhooks** option is selected on the subsequent screen, then select the **Authorize** button.
 
 ## Environment Variables
+
+Create `.env` file containing the following variables:
 
 ### DISCORD_BOT_NAME
 
